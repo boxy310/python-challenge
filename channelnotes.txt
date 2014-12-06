@@ -1,0 +1,17 @@
+seed = 90052
+output = open('channelout.txt', "w")
+
+
+def loopfile(seed, output):
+	for i in range(2000):
+		filename = seed+'.txt'
+		data = open(filename, "r")
+		line = data.readline()
+		print line
+		seed = line[16:len(teststr)]
+		if not(seed.isdigit()):
+			break
+		output.write(data.readline())
+		output.write(data.readline())
+		output.write(data.readline())
+		data.close()

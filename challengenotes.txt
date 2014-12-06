@@ -1,0 +1,78 @@
+datafile = open("equality.txt", "r")
+
+matrix = []
+i = 0
+
+for line in datafile:
+    matrix.append([])
+    for c in line:
+        matrix[i].append(c)
+    i += 1
+
+# this code doesn't give the answer, but I developed it anyway (2 dimensions)
+for i in range(len(matrix)):
+    for j in range(len(matrix)):
+        if (i > 0 and i < len(matrix)-1 and j > 0 and j < len(matrix[i])-1):
+            if not(matrix[i][j].istitle()):
+                mask = []
+                for m in [0,1,2]:
+                    mask.append([])
+                    for n in [0,1,2]:
+                        mask[m].append([])
+                        mask[m][n] = matrix[i-1+m][j-1+n].istitle()
+                if (mask[0][0] and mask[0][1] and mask[0][2] and mask[1][0] and mask[1][2] and mask[2][0] and mask[2][1] and mask[2][2]):
+                    print matrix[i][j]
+
+# this is *almost* working:
+for i in range(len(matrix)):
+    for j in [3,len(matrix[i])-2]:
+        if matrix[i][j].istitle():
+            mask = [0,0,0,0,0,0,0]
+            for n in range(7):
+                p = n - 3
+                mask[n] = matrix[i][p].istitle()
+            print mask
+            if (mask[0] and mask[1] and mask[2] and mask[4] and mask[5] and mask[6]):
+                print matrix[i][j]
+
+# well this is kicking *something* out:
+for i in range(len(matrix)):
+    for j in [3,len(matrix[i])-4]:
+        test = True
+        for m in [-3,-2,-1,1,2,3]:
+            test = (test and matrix[i][j+m].istitle())
+        if (test and not(matrix[i][j].istitle())):
+            print str(i)+'x'+str(j)+':'+matrix[i][j]
+
+# finally, got this bitch working!
+output = ''
+for i in range(len(matrix)):
+    for j in range(3,len(matrix[i])-3):
+        test = True
+        try:
+            test = (test and not(matrix[i][j-4].istitle()))
+        except:
+            pass
+        for m in [-3,-2,-1,1,2,3]:
+            test = (test and matrix[i][j+m].istitle())
+        try:
+            test = (test and not(matrix[i][j+4].istitle()))
+        except:
+            pass
+        if (test and not(matrix[i][j].istitle())):
+            output += matrix[i][j]
+output
+
+# challenge 4
+from urllib import *
+baseurl = 'http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing='
+seednothing = '12345'
+for i in range(400):
+    callurl = baseurl+seednothing
+    code = urlopen(callurl).read()
+    print code
+    if (code != 'Yes. Divide by two and keep going.'):
+        seednothing = code[len(code)-5:len(code)]
+    else:
+        seednothing = str(int(seednothing)/2)
+
